@@ -24,4 +24,4 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 
 ## License
-[MIT](https://choosealicense.com/licenses/mit/)
+[APACHE2.0](https://github.com/flexera/aws-control-tower/blob/main/LICENSE)
