@@ -4,12 +4,15 @@ Parameters:
   ExternalId:
     Type: String
     Description: The Id of your Flexera Organization
+    Default: '123123'
   RefreshToken:
     Type: String
     Description: RefreshToken from the Flexera Platform.
+    Default: '123123'
   S3Bucket:
     Type: String
     Description: The name of the S3 bucket where your Hourly Cost and Usage Report is stored.
+    Default: '123123'
 Resources:
   OptimaRole:
     Type: AWS::IAM::Role
@@ -21,7 +24,8 @@ Resources:
           - Effect: Allow
             Principal:
               Service: lambda.amazonaws.com
-            Action: sts:AssumeRole
+            Action: 
+            - sts:AssumeRole
       Path: /
       Policies:
         - PolicyName: Flexera_Operations
@@ -51,8 +55,8 @@ Resources:
                 Action:
                   - iam:PassRole
                 Resource: !Join [':', ['arn:aws:iam:', !Ref "AWS::AccountId", 'role/service-role/FlexeraOptimaControlTower']]
-      # ManagedPolicyArns:
-      #   - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
 
   # CreateS3Bucket:
   #   Type: AWS::Lambda::Function
