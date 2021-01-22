@@ -28,7 +28,7 @@ def lambda_handler(event:, context:)
   end
   
   #Setup CUR to upload files to the s3 bucket created above.
-  if createReport?(bucket_name,prefix,execution_id,region)
+  if report_created?(bucket_name,prefix,execution_id,region)
     puts "CUR created."
   else
     puts "CUR not created."
@@ -79,7 +79,7 @@ rescue StandardError => e
 end
 
 
-def createReport?(bucket_name,prefix,execution_id,region)
+def report_created?(bucket_name,prefix,execution_id,region)
   client = Aws::CostandUsageReportService::Client.new(region: region)
 
     resp = client.put_report_definition({
