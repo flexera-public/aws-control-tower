@@ -49,17 +49,17 @@ end
 def bucket_policy_added?(s3_client, bucket_name)
   bucket_policy = {
     'Version' => '2008-10-17',
-    'Id' => "Policy1335892530063",
+    'Id' => "AWSCURPolicy",
     'Statement' => [
       {
-        "Sid": "Stmt1335892150622",
+        "Sid": "AWSBucketCURAcl",
         'Effect' => 'Allow',
         'Principal' => { 'AWS' => 'arn:aws:iam::386209384616:root' },
         'Action' => ["s3:GetBucketAcl","s3:GetBucketPolicy"],
         'Resource' => "arn:aws:s3:::#{bucket_name}"
       },
       {
-        "Sid": "Stmt1335892526596",
+        "Sid": "AWSBucketPut",
         'Effect' => 'Allow',
         'Principal' => { 'AWS' => 'arn:aws:iam::386209384616:root' },
         'Action' => "s3:PutObject",
