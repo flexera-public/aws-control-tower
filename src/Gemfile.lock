@@ -1,0 +1,13 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    cfnresponse (0.4.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  cfnresponse
+
+BUNDLED WITH
+   1.17.3
