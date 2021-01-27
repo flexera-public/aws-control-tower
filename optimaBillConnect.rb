@@ -5,6 +5,7 @@ include Cfnresponse
 
 def lambda_handler(event:, context:)
     puts("Received event: " + json_pretty(event))
+
     case event['RequestType']
     when "Create"
         refresh_token = event['ResourceProperties']['RefreshToken']
@@ -19,7 +20,7 @@ def lambda_handler(event:, context:)
 
         #account_id = AWS Payer Account
         #bucket_name = bucket where CUR has been configured
-        #s3_prefix = prefix used for CUR configuration
+        #prefix = prefix used for CUR configuration
         #role_arn = arn of role created via CFT
         #flexera_org_id = the flexera organization id 
     
@@ -49,8 +50,7 @@ def get_access_token(refresh_token)
         "refresh_token" => refresh_token,
     }.to_json
 
-    resp = Faraday.post(oauth_uri, oauth_body,
-        "Content-Type" => "application/json")
+    resp = Faraday.post(oauth_uri, oauth_body,"Content-Type" => "application/json")
 
     if resp.status == 200
         puts "Successfully retrieved access token" 
@@ -89,13 +89,3 @@ def bill_connect(account_id,s3_bucket,s3_prefix,role_arn,flexera_org_id,access_t
     end
 
 end
-
-
-
-
-
-
-
-
-
- 
