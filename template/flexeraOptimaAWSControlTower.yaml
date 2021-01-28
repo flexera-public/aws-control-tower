@@ -1,23 +1,26 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Flexera Optima Integration with AWS Control Tower
 Parameters:
-  ExternalId:
+  FlexeraOrgId:
     Type: String
     Description: The Id of your Flexera Organization
-    Default: '123123'
+    Default: ''
   RefreshToken:
     Type: String
     Description: RefreshToken from the Flexera Platform.
-    Default: '123123'
+    Default: ''
+    NoEcho: True
   S3Bucket:
     Type: String
     Description: The name of the S3 bucket where your Hourly Cost and Usage Report is stored. Leave it empty to allow for auto-create.
     Default: ''
   QSS3BucketName:
+    Description: Flexera S3 bucket where the Lambda function package resides, do not modify this unless you are required by Flexera team
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
     Default: 'wellsiau-quickstart'
     Type: String
   QSS3KeyPrefix:
+    Description: Flexera S3 bucket prefix where the Lambda function package resides, do not modify this unless you are required by Flexera team
     AllowedPattern: ^[0-9a-zA-Z-/_]*$
     Default: 'flexera_optima/'
     Type: String
@@ -177,3 +180,95 @@ Resources:
       S3Bucket: !Ref S3Bucket
     DependsOn:
     - OptimaOnboarding
+
+  OptimaConnectRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: 'arn:aws:iam::451234325714:role/production_customer_access'
+            Action: 'sts:AssumeRole'
+            Condition:
+              StringEquals:
+                'sts:ExternalId': !Ref FlexeraOrgId
+      Policies:
+        - PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 's3:ListBucket'
+                  - 's3:GetBucketLocation'
+                Resource:
+                  - !Join 
+                    - ''
+                    - - 'arn:aws:s3:::'
+                      - !GetAtt OptimaFirstLaunch.bucket_name
+              - Effect: Allow
+                Action:
+                  - 's3:GetObject'
+                Resource:
+                  - !Join 
+                    - ''
+                    - - 'arn:aws:s3:::'
+                      - !GetAtt OptimaFirstLaunch.bucket_name
+                      - /*
+              - Effect: Allow
+                Action:
+                  - 'organizations:Describe*'
+                  - 'organizations:List*'
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - 'ce:GetReservationUtilization'
+                Resource: '*'
+          PolicyName: FlexeraOptimaAccessPolicy
+      RoleName: FlexeraOptimaAccessRole
+      Description: >-
+        Role that provides access for Flexera to Cost Explorer and HCUR S3
+        Bucket.
+        
+  OptimaBillConnect:
+    Type: AWS::Lambda::Function
+    DependsOn: 
+    - CopyZips
+    Properties:
+      Code:
+        S3Bucket: !Ref 'LambdaZipsBucket'
+        S3Key: !Sub '${QSS3KeyPrefix}optimaOnboarding.zip'
+      Handler: optimaOnboarding.billconnect_handler
+      MemorySize: 128
+      Role: !GetAtt "OptimaOnboardingRole.Arn"
+      Runtime: ruby2.7
+      Timeout: 120
+
+  OptimaFirstConnect:
+    Type: AWS::CloudFormation::CustomResource
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+        - OptimaBillConnect
+        - Arn
+      RefreshToken: !Ref RefreshToken
+      AccountId: !Ref "AWS::AccountId"
+      S3Bucket: !GetAtt OptimaFirstLaunch.bucket_name
+      S3Prefix: /
+      RoleARN: !GetAtt OptimaConnectRole.Arn
+      FlexeraOrgId: !Ref FlexeraOrgId
+    DependsOn:
+    - OptimaBillConnect
+    - OptimaConnectRole
+    
+Outputs:
+  CURBucketName:
+    Description: The S3 bucket name for Cost and Usage report
+    Value: !GetAtt OptimaFirstLaunch.bucket_name
+  CURReportName:
+    Description: The Cost and Usage Report name 
+    Value: !GetAtt OptimaFirstLaunch.report_name
+  OptimaConnectRole:
+    Description: IAM Role for Optima Connect
+    Value: !GetAtt OptimaConnectRole.Arn
