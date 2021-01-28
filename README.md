@@ -12,6 +12,18 @@ Follow the steps in the  [Flexera Optima Integration Guide](https://linktodguide
 - Launch the template `flexeraOptimaAWSControlTower` on your AWS Control Tower Management / Payer account
 - Enter all the required parameters
 
+    ####  FlexeraOrgId
+    ##### `The Id of your Flexera Organization` [[documentation]](https://docs.flexera.com/flexera/EN/FlexeraAPI/OrgID.htm)
+    ### RefreshToken 
+    ##### `RefreshToken from the Flexera Platform.` [[documentation]](https://docs.flexera.com/flexera/EN/FlexeraAPI/GenerateRefreshToken.htm)
+    ### S3Bucket 
+    ##### `The name of the S3 bucket where your Hourly Cost and Usage Report is stored. Leave it empty to allow for auto-create.`
+    ### QSS3BucketName
+    ##### `Flexera S3 bucket where the Lambda function package resides, do not modify this unless you are required by Flexera team`
+    ### QSS3KeyPrefix
+    ##### `Flexera S3 bucket prefix where the Lambda function package resides, do not modify this unless you are required by Flexera team`
+
+
 ## Build
 run 'build.sh' by specifying the S3 bucket and prefix where you want to store the Lambda package
 
