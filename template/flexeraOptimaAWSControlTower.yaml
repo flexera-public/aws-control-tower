@@ -21,12 +21,12 @@ Parameters:
   QSS3BucketName:
     Description: Flexera S3 bucket where the Lambda function package resides, do not modify this unless you are required by Flexera team
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
-    Default: 'wellsiau-quickstart'
+    Default: 'flxlambda'
     Type: String
   QSS3KeyPrefix:
     Description: Flexera S3 bucket prefix where the Lambda function package resides, do not modify this unless you are required by Flexera team
     AllowedPattern: ^[0-9a-zA-Z-/_]*$
-    Default: 'flexera_optima/'
+    Default: 'assets/'
     Type: String
 Resources:
   LambdaZipsBucket:
@@ -165,7 +165,8 @@ Resources:
                 Action:
                   - s3:CreateBucket
                   - s3:PutBucketPolicy
-                Resource: 'arn:aws:s3:::flexera-optima-*'
+                Resource: 
+                !If [UseS3BucketName, !Ref S3Bucket,  'arn:aws:s3:::flexera-optima-*']
               - Sid: CUROperations
                 Effect: Allow
                 Action:
