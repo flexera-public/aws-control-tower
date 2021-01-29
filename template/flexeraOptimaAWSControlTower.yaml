@@ -271,6 +271,9 @@ Outputs:
   CURBucketName:
     Description: The S3 bucket name for Cost and Usage report
     Value: !GetAtt OptimaFirstLaunch.bucket_name
+  CURBucketName:
+    Description: The S3 bucket prefix for Cost and Usage report
+    Value: !GetAtt OptimaFirstLaunch.prefix
   CURReportName:
     Description: The Cost and Usage Report name 
     Value: !GetAtt OptimaFirstLaunch.report_name
