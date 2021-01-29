@@ -14,6 +14,10 @@ Parameters:
     Type: String
     Description: The name of the S3 bucket where your Hourly Cost and Usage Report is stored. Leave it empty to allow for auto-create.
     Default: ''
+  S3Prefix:
+    Type: String
+    Description: The name of the S3 bucket prefix where your Hourly Cost and Usage Report is stored. Leave it empty to allow for auto-create.
+    Default: ''
   QSS3BucketName:
     Description: Flexera S3 bucket where the Lambda function package resides, do not modify this unless you are required by Flexera team
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
@@ -178,6 +182,7 @@ Resources:
         - OptimaOnboarding
         - Arn
       S3Bucket: !Ref S3Bucket
+      S3Prefix: !Ref S3Prefix
     DependsOn:
     - OptimaOnboarding
 
@@ -255,7 +260,7 @@ Resources:
       RefreshToken: !Ref RefreshToken
       AccountId: !Ref "AWS::AccountId"
       S3Bucket: !GetAtt OptimaFirstLaunch.bucket_name
-      S3Prefix: /
+      S3Prefix: !GetAtt OptimaFirstLaunch.prefix
       RoleARN: !GetAtt OptimaConnectRole.Arn
       FlexeraOrgId: !Ref FlexeraOrgId
     DependsOn:

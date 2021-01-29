@@ -11,13 +11,14 @@ def lambda_handler(event:, context:)
     when "Create"
       region = ENV["AWS_REGION"]
       bucket_name = event['ResourceProperties']['S3Bucket']
-      prefix='/'
+      prefix = event['ResourceProperties']['S3Prefix']
       execution_id = SecureRandom.uuid
       
       if bucket_name == ""
         s3_client = Aws::S3::Client.new(region: region)
         bucket_name = 'flexera-optima-' + execution_id
         report_name = 'FlexeraOptimaCostReport-' + execution_id
+        prefix = 'cloudcost/'
         
         #create the s3 bucket that will store CURs
         if bucket_created?(s3_client, bucket_name)
@@ -43,10 +44,10 @@ def lambda_handler(event:, context:)
         raise 'CUR creation error'
       end
       
-    
       data = {
         'bucket_name' => "#{bucket_name}",
-        'report_name' => "#{report_name}"
+        'report_name' => "#{report_name}",
+        'prefix' => "#{prefix}"
         }
       cfn.success(Data: data)
       

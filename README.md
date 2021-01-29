@@ -24,7 +24,8 @@ Follow the steps in the  [Flexera Optima Integration Guide](https://linktodguide
     ##### `Flexera S3 bucket prefix where the Lambda function package resides, do not modify this unless you are required by Flexera team`
 
 
-## Build
+## Build 
+#### (for use when updating integration package)
 run 'build.sh' by specifying the S3 bucket and prefix where you want to store the Lambda package
 
 example:
