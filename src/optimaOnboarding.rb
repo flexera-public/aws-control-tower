@@ -23,18 +23,17 @@ def lambda_handler(event:, context:)
         #create the s3 bucket that will store CURs
         if bucket_created?(s3_client, bucket_name)
           puts "Bucket '#{bucket_name}' created."
+          #Apply the bucket policy that will allow CURs to be uploaded by AWS (386209384616)
+          if bucket_policy_added?(s3_client, bucket_name)
+            puts "Bucket Policy Applied."
+          else
+            raise 'Bucket policy error'
+          end
         else
           raise 'Bucket creation error'
         end
       else
         puts "Bucket '#{bucket_name}' already exist" 
-      end
-
-      #Apply the bucket policy that will allow CURs to be uploaded by AWS (386209384616)
-      if bucket_policy_added?(s3_client, bucket_name)
-        puts "Bucket Policy Applied."
-      else
-        raise 'Bucket policy error'
       end
       
       #Setup CUR to upload files to the s3 bucket created above.
