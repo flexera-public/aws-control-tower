@@ -14,13 +14,17 @@ Follow the steps in the  [Flexera Optima Integration Guide](https://linktodguide
 
     ####  FlexeraOrgId
     ##### `The Id of your Flexera Organization` [[documentation]](https://docs.flexera.com/flexera/EN/FlexeraAPI/OrgID.htm)
-    ### RefreshToken 
+    #### RefreshToken 
     ##### `RefreshToken from the Flexera Platform.` [[documentation]](https://docs.flexera.com/flexera/EN/FlexeraAPI/GenerateRefreshToken.htm)
-    ### S3Bucket 
+    #### S3Bucket 
     ##### `The name of the S3 bucket where your Hourly Cost and Usage Report is stored. Leave it empty to allow for auto-create.`
-    ### QSS3BucketName
+    #### S3Prefix 
+    ##### `The name of the S3 bucket prefix where your Hourly Cost and Usage Report is stored. Leave it empty to allow for auto-create.`
+    <br /> 
+- Optional Parameters
+    #### QSS3BucketName
     ##### `Flexera S3 bucket where the Lambda function package resides, do not modify this unless you are required by Flexera team`
-    ### QSS3KeyPrefix
+    #### QSS3KeyPrefix
     ##### `Flexera S3 bucket prefix where the Lambda function package resides, do not modify this unless you are required by Flexera team`
 
 
