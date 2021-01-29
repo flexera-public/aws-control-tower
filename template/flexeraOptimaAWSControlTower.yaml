@@ -14,16 +14,50 @@ Parameters:
     Type: String
     Description: The name of the S3 bucket where your Hourly Cost and Usage Report is stored. Leave it empty to allow for auto-create.
     Default: ''
+  S3Prefix:
+    Type: String
+    Description: The name of the S3 bucket prefix where your Hourly Cost and Usage Report is stored. Leave it empty to allow for auto-create.
+    Default: ''
   QSS3BucketName:
     Description: Flexera S3 bucket where the Lambda function package resides, do not modify this unless you are required by Flexera team
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
-    Default: 'wellsiau-quickstart'
+    Default: 'flxlambda'
     Type: String
   QSS3KeyPrefix:
     Description: Flexera S3 bucket prefix where the Lambda function package resides, do not modify this unless you are required by Flexera team
     AllowedPattern: ^[0-9a-zA-Z-/_]*$
-    Default: 'flexera_optima/'
+    Default: 'assets/'
     Type: String
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      -
+        Label:
+          default: "Mandatory Parameters"
+        Parameters:
+          - FlexeraOrgId
+          - RefreshToken
+          - S3Bucket
+          - S3Prefix
+      -
+        Label:
+          default: "Optional Configuration"
+        Parameters:
+          - QSS3BucketName
+          - QSS3KeyPrefix
+    ParameterLabels:
+      FlexeraOrgId:
+        default: "FlexeraOrgId"
+      RefreshToken:
+        default: "RefreshToken"
+      S3Bucket:
+        default: "S3Bucket"
+      S3Prefix:
+        default: "S3Prefix"
+      QSS3BucketName:
+        default: "QSS3BucketName"
+      QSS3KeyPrefix:
+        default: "QSS3KeyPrefix"
 Resources:
   LambdaZipsBucket:
     Type: AWS::S3::Bucket
@@ -178,6 +212,7 @@ Resources:
         - OptimaOnboarding
         - Arn
       S3Bucket: !Ref S3Bucket
+      S3Prefix: !Ref S3Prefix
     DependsOn:
     - OptimaOnboarding
 
@@ -255,7 +290,7 @@ Resources:
       RefreshToken: !Ref RefreshToken
       AccountId: !Ref "AWS::AccountId"
       S3Bucket: !GetAtt OptimaFirstLaunch.bucket_name
-      S3Prefix: /
+      S3Prefix: !GetAtt OptimaFirstLaunch.prefix
       RoleARN: !GetAtt OptimaConnectRole.Arn
       FlexeraOrgId: !Ref FlexeraOrgId
     DependsOn:
@@ -266,6 +301,9 @@ Outputs:
   CURBucketName:
     Description: The S3 bucket name for Cost and Usage report
     Value: !GetAtt OptimaFirstLaunch.bucket_name
+  CURBucketName:
+    Description: The S3 bucket prefix for Cost and Usage report
+    Value: !GetAtt OptimaFirstLaunch.prefix
   CURReportName:
     Description: The Cost and Usage Report name 
     Value: !GetAtt OptimaFirstLaunch.report_name

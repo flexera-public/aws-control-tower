@@ -11,29 +11,29 @@ def lambda_handler(event:, context:)
     when "Create"
       region = ENV["AWS_REGION"]
       bucket_name = event['ResourceProperties']['S3Bucket']
-      prefix='/'
+      prefix = event['ResourceProperties']['S3Prefix']
       execution_id = SecureRandom.uuid
+      s3_client = Aws::S3::Client.new(region: region)
       
       if bucket_name == ""
-        s3_client = Aws::S3::Client.new(region: region)
         bucket_name = 'flexera-optima-' + execution_id
         report_name = 'FlexeraOptimaCostReport-' + execution_id
+        prefix = 'cloudcost/'
         
         #create the s3 bucket that will store CURs
         if bucket_created?(s3_client, bucket_name)
           puts "Bucket '#{bucket_name}' created."
+          #Apply the bucket policy that will allow CURs to be uploaded by AWS (386209384616)
+          if bucket_policy_added?(s3_client, bucket_name)
+            puts "Bucket Policy Applied."
+          else
+            raise 'Bucket policy error'
+          end
         else
           raise 'Bucket creation error'
         end
-        
-        #Apply the bucket policy that will allow CURs to be uploaded by AWS (386209384616)
-        if bucket_policy_added?(s3_client, bucket_name)
-          puts "Bucket Policy Applied."
-        else
-          raise 'Bucket policy error'
-        end
       else
-        puts "Bucket '#{bucket_name}' already exist"
+        puts "Bucket '#{bucket_name}' already exist" 
       end
       
       #Setup CUR to upload files to the s3 bucket created above.
@@ -43,10 +43,10 @@ def lambda_handler(event:, context:)
         raise 'CUR creation error'
       end
       
-    
       data = {
         'bucket_name' => "#{bucket_name}",
-        'report_name' => "#{report_name}"
+        'report_name' => "#{report_name}",
+        'prefix' => "#{prefix}"
         }
       cfn.success(Data: data)
       
