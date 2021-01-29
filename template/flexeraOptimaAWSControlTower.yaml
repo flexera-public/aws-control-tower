@@ -157,7 +157,6 @@ Resources:
       Path: /
       Policies:
         - PolicyName: OptimaOnboardingOperations
-          Condition: CreateBucketPolicy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -174,25 +173,6 @@ Resources:
                 Resource: !Join [':', ['arn:aws:cur', !Ref "AWS::Region", !Ref "AWS::AccountId", 'definition/FlexeraOptimaCostReport*']]                
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-
-      Policies:
-          - PolicyName: OptimaOnboardingOperations
-            PolicyDocument:
-              Version: 2012-10-17
-              Statement:
-                - Sid: S3Operations
-                  Effect: Allow
-                  Action:
-                    - s3:CreateBucket
-                    - s3:PutBucketPolicy
-                  Resource:  !Join ['arn:aws:s3:::', !Ref "S3Bucket"]
-                - Sid: CUROperations
-                  Effect: Allow
-                  Action:
-                    - cur:PutReportDefinition                
-                  Resource: !Join [':', ['arn:aws:cur', !Ref "AWS::Region", !Ref "AWS::AccountId", 'definition/FlexeraOptimaCostReport*']]                
-        ManagedPolicyArns:
-          - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
 
   OptimaFirstLaunch:
     Type: AWS::CloudFormation::CustomResource
