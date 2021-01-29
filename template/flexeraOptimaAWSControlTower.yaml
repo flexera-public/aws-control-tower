@@ -28,6 +28,36 @@ Parameters:
     AllowedPattern: ^[0-9a-zA-Z-/_]*$
     Default: 'assets/'
     Type: String
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      -
+        Label:
+          default: "Mandatory Parameters"
+        Parameters:
+          - FlexeraOrgId
+          - RefreshToken
+          - S3Bucket
+          - S3Prefix
+      -
+        Label:
+          default: "Optional Configuration"
+        Parameters:
+          - QSS3BucketName
+          - QSS3KeyPrefix
+    ParameterLabels:
+      FlexeraOrgId:
+        default: "FlexeraOrgId"
+      RefreshToken:
+        default: "RefreshToken"
+      S3Bucket:
+        default: "S3Bucket"
+      S3Prefix:
+        default: "S3Prefix"
+      QSS3BucketName:
+        default: "QSS3BucketName"
+      QSS3KeyPrefix:
+        default: "QSS3KeyPrefix"
 Resources:
   LambdaZipsBucket:
     Type: AWS::S3::Bucket
