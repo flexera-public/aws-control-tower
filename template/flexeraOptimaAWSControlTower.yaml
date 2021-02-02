@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Flexera Optima Integration with AWS Control Tower
+Description: Flexera Optima Integration with AWS Control Tower (MPCT-ylryxjkg)
 Parameters:
   FlexeraOrgId:
     Type: String
