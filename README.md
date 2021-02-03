@@ -40,7 +40,7 @@ build.sh my_bucket_name my_prefix
 
 ### Notes
 #### src - contains the lambda function source and zip file.
-#### template - contains the yaml conformation template
+#### template - contains the yaml cloudformation template
 <br /> 
 
 ## Contributing
