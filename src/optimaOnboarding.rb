@@ -109,7 +109,7 @@ rescue StandardError => e
 end
 
 def report_created?(bucket_name,prefix,execution_id,region)
-  client = Aws::CostandUsageReportService::Client.new(region: region)
+  client = Aws::CostandUsageReportService::Client.new(region: 'us-east-1')
     resp = client.put_report_definition({
       report_definition: {
         report_name: "FlexeraOptimaCostReport-" + execution_id,
