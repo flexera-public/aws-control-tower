@@ -200,7 +200,7 @@ Resources:
                 Effect: Allow
                 Action:
                   - cur:PutReportDefinition                
-                Resource: !Join [':', ['arn:aws:cur', !Ref "AWS::Region", !Ref "AWS::AccountId", 'definition/FlexeraOptimaCostReport*']]                
+                Resource: !Join [':', ['arn:aws:cur', '*', !Ref "AWS::AccountId", 'definition/FlexeraOptimaCostReport*']]                
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
 
